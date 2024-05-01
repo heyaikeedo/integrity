@@ -1,0 +1,61 @@
+{
+    "name": "heyaikeedo/integrity",
+    "description": "Aikeedo System Integrity Manager",
+    "keywords": [
+        "aikeedo",
+        "heyaikeedo"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Aikeedo\\Integrity\\": "src/"
+        },
+        "exclude-from-classmap": [
+            "/tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aikeedo\\Integrity\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Aikeedo Team",
+            "email": "hey@aikeedo.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "psr/http-factory": "^1.0",
+        "psr/cache": "^3.0",
+        "psr/http-client": "^1.0",
+        "iziphp/router": "^1.2",
+        "firebase/php-jwt": "^6.10"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^1.8",
+        "squizlabs/php_codesniffer": "^3.7",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpmd/phpmd": "^2.13"
+    },
+    "scripts": {
+        "phpstan": "phpstan analyse",
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf -v",
+        "phpmd": "phpmd src ansi phpmd.xml --suffixes=php",
+        "unit-test": "phpunit",
+        "code-coverage": "phpunit --coverage-html coverage",
+        "analyse": [
+            "@phpstan",
+            "@phpcs",
+            "@phpmd",
+            "@unit-test"
+        ],
+        "fix": [
+            "@phpcbf"
+        ]
+    }
+}
