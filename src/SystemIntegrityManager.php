@@ -35,6 +35,9 @@ class SystemIntegrityManager
             return;
         }
 
+        $item->expiresAt(new DateTimeImmutable('+7 days'));
+        $this->cache->save($item);
+
         try {
             $req = $this->reqfac->createRequest('POST', 'https://api.aikeedo.com/iam')
                 ->withBody(
@@ -49,8 +52,5 @@ class SystemIntegrityManager
             $this->client->sendRequest($req);
         } catch (Throwable) {
         }
-
-        $item->expiresAt(new DateTimeImmutable('+7 days'));
-        $this->cache->save($item);
     }
 }
