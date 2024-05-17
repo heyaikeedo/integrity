@@ -29,10 +29,10 @@
     "require": {
         "php": "^8.2",
         "psr/http-factory": "^1.0",
-        "psr/cache": "^3.0",
-        "psr/http-client": "^1.0",
         "iziphp/router": "^1.2",
-        "firebase/php-jwt": "^6.10"
+        "firebase/php-jwt": "^6.10",
+        "symfony/cache": "^7.0",
+        "symfony/http-client": "^7.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

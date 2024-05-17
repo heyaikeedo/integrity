@@ -6,17 +6,15 @@ namespace Aikeedo\Integrity;
 
 use DateTimeImmutable;
 use Easy\Router\Mapper\SimpleMapper;
-use Psr\Cache\CacheItemPoolInterface;
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\HttpClient\Psr18Client;
 use Throwable;
 
 class SystemIntegrityManager
 {
     public function __construct(
-        private CacheItemPoolInterface $cache,
-        private ClientInterface $client,
         private RequestFactoryInterface $reqfac,
         private StreamFactoryInterface $streamfac,
         private SimpleMapper $mapper,
@@ -30,13 +28,17 @@ class SystemIntegrityManager
     ): void {
         $this->mapper->map('POST', '/iam', Handler::class);
 
-        $item = $this->cache->getItem('iam');
+        $cache = new FilesystemAdapter();
+        $item = $cache->getItem('iam');
         if ($item->isHit()) {
             return;
         }
 
         $item->expiresAt(new DateTimeImmutable('+7 days'));
-        $this->cache->save($item);
+        $cache->save($item);
+
+        $client = new Psr18Client();
+        $client = $client->withOptions(['timeout' => 10]);
 
         try {
             $req = $this->reqfac->createRequest('POST', 'https://api.aikeedo.com/iam')
@@ -49,7 +51,7 @@ class SystemIntegrityManager
                 )
                 ->withHeader('Content-Type', 'application/json');
 
-            $this->client->sendRequest($req);
+            $client->sendRequest($req);
         } catch (Throwable) {
         }
     }
